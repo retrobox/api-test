@@ -1,3 +1,4 @@
 node_modules
 karate.jar
 target
+.env
