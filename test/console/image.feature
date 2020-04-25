@@ -1,10 +1,21 @@
-Feature: sample karate test script
+Feature: Image crude
 
   Background:
     * url 'https://api.retrobox.tech'
 
-  Scenario: get pong
-    Given path 'ping'
-    When method get
-    Then status 200
-    And match response == {success: true}
+Scenario Outline: Create image
+  # note the 'text' keyword instead of 'def'
+  * text query =
+    """
+    {
+      hero(name: "<name>") {
+        height
+        mass
+      }
+    }
+    """
+  Given path 'graphql'
+  And request { query: '#(query)' }
+  And header Accept = 'application/json'
+  When method post
+  Then status 200
