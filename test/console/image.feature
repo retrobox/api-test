@@ -5,9 +5,9 @@ Feature: console images test
     * configure headers = commonHeaders
 
   Scenario: Test console images
-    # ===========================
-    # get console versions
-    # ===========================
+    # ─────────────────────────────────────────────────────────────────────────────
+    #                            Get consoles versions                             
+    # ─────────────────────────────────────────────────────────────────────────────
     Given url baseUrl + 'graphql'
       * text query = 
       """
@@ -26,9 +26,9 @@ Feature: console images test
       * match $.data.getConsoleVersions[*].id == '#[] #string'
       * match $.data.getConsoleVersions[*].id == '#[] #regex ^(\\d+\\.)?(\\d+\\.)?(\\*|\\d+)$'
 
-    # ===========================
-    # store console image
-    # ===========================
+    # ──────────────────────────────────────────────────────────────────────────────
+    #                              Store console image                              
+    # ──────────────────────────────────────────────────────────────────────────────
     Given url baseUrl + 'graphql'
       * text query = 
       """
@@ -57,9 +57,9 @@ Feature: console images test
       * match $.data.storeConsoleImage.saved == true
       * def imageId = $.data.storeConsoleImage.id
 
-    # ===========================
-    # get many console image
-    # ===========================
+    # ──────────────────────────────────────────────────────────────────────────────
+    #                            Get many console images                            
+    # ──────────────────────────────────────────────────────────────────────────────
     Given url baseUrl + 'graphql'
       * text query = 
       """
@@ -78,9 +78,9 @@ Feature: console images test
       * match $.success == true
       * match $.data.getManyConsoleImages contains {id: '#(imageId)', software_version: '#(softwareVersion)', console_version: '#(consoleVersion)', version: '#("h" + consoleVersion + "-s" + softwareVersion)'}
 
-    # ===========================
-    # update console image
-    # ===========================
+    # ──────────────────────────────────────────────────────────────────────────────
+    #                             Update console images                             
+    # ──────────────────────────────────────────────────────────────────────────────
     Given url baseUrl + 'graphql'
       * text query = 
       """
@@ -105,9 +105,9 @@ Feature: console images test
       * match $.success == true
       * match $.data.updateConsoleImage == true
 
-    # ===========================
-    # get many console image
-    # ===========================
+    # ──────────────────────────────────────────────────────────────────────────────
+    #                  Get many console image to verify the store                   
+    # ──────────────────────────────────────────────────────────────────────────────
     Given url baseUrl + 'graphql'
       * text query = 
       """
@@ -124,9 +124,9 @@ Feature: console images test
       * match $.success == true
       * match $.data.getManyConsoleImages contains {id: '#(imageId)', description: '#(imageDescription)'}
 
-    # ===========================
-    # destroy console image
-    # ===========================
+    # ──────────────────────────────────────────────────────────────────────────────
+    #                            Destroy console images                             
+    # ──────────────────────────────────────────────────────────────────────────────
     Given url baseUrl + 'graphql'
       * text query = 
       """
