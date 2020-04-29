@@ -6,7 +6,6 @@
 - Rename/move the binary
 - And voila !
 */
-
 const fetch = require("node-fetch")
 const fs = require('fs')
 const request = require('request')
@@ -14,17 +13,15 @@ const progress = require('request-progress')
 const progressBar = require('cli-progress')
 const prettyBytes = require('pretty-bytes')
 const chalk = require('chalk')
-
 const fileName = "karate.jar"
-
 const bar = new progressBar.SingleBar({
   format: '> ' + fileName + ' |' + chalk.green('{bar}') + '| {percentage}% '
     + chalk.gray('||') + ' {value}/{total} Bytes ' + chalk.gray('||')
-    + 'Speed: ' + chalk.cyan('{speed}/sec'),
+    + ' Speed: ' + chalk.cyan('{speed}/sec'),
   barCompleteChar: '\u2588',
   barIncompleteChar: '\u2591',
   hideCursor: true
-});
+})
 let total = null
 
 fetch("https://api.github.com/repos/intuit/karate/releases").then(async (response) => {
@@ -34,13 +31,13 @@ fetch("https://api.github.com/repos/intuit/karate/releases").then(async (respons
   console.log()
   progress(request(url))
   .on('progress', function (state) {
-      if (total === null) {
-        total = state.size.total
-        bar.start(total, 0, {speed: "N/A"})
-      }
-      bar.update(state.size.transferred, {
-        speed: state.speed != null ? prettyBytes(state.speed) : "N/A"
-      })
+    if (total === null) {
+      total = state.size.total
+      bar.start(total, 0, {speed: "N/A"})
+    }
+    bar.update(state.size.transferred, {
+      speed: state.speed != null ? prettyBytes(state.speed) : "N/A"
+    })
   })
   .on('error', function (err) {
     console.error(err);
@@ -53,5 +50,4 @@ fetch("https://api.github.com/repos/intuit/karate/releases").then(async (respons
     bar.stop()
   })
   .pipe(fs.createWriteStream(fileName));
- })
-
+})
