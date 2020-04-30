@@ -15,12 +15,10 @@ if (config.baseUrl.substr(config.baseUrl.length - 1) !== '/')
     config.baseUrl += "/"
 
 const waitUntilServerStarted = () => {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
         request
             .get(config.baseUrl)
             .on('response', () => {
-                hasConnexion = true
-                console.log('> Got connexion')
                 return resolve()
             })
             .on('error', () => { 
@@ -32,7 +30,8 @@ const waitUntilServerStarted = () => {
 }
 
 (async () => {
-    await waitUntilServerStarted() 
+    await waitUntilServerStarted()
+    console.log('> Got connexion')
 
     let cmd = ['-cp', 'karate.jar:.', `-Dkarate.env=${JSON.stringify(config)}`, 'com.intuit.karate.Main', '-T', '1']
 
@@ -41,6 +40,8 @@ const waitUntilServerStarted = () => {
     } else {
         cmd.push('test')
     }
+   
+    console.log('DEBUG: using cmd:', cmd)
 
     let karate = childProcess.spawn('java', cmd)
 
@@ -60,6 +61,7 @@ const waitUntilServerStarted = () => {
                 let success = str.indexOf('<<pass>>') !== -1
                 let outcome = success ? chalk.green('PASS') : chalk.red('FAIL')
                 console.log('   ' + outcome + chalk.gray(' - ' + features[1] + '/' + features[2] + ' - ') + path[0])
+                console.log('   ' + outcome + ' - ' + features[1] + '/' + features[2] + ' - ' + path[0])
                 // console.log(duration)
             }
             if (str.indexOf('failed features:') !== -1) {
@@ -68,8 +70,10 @@ const waitUntilServerStarted = () => {
             }
             if (failedFeatureStr !== null && str !== '')
                 failedFeatureStr += str
-            if (failedFeatureStr !== null && str.match(new RegExp(/([a-z0-9_\-]+.)+:/)) !== null)
+            if (failedFeatureStr !== null && str.match(new RegExp(/([a-z0-9_\-]+.)+:/)) !== null) {
                 console.log(chalk.redBright(failedFeatureStr.replace('failed features:', '')))
+                console.log(failedFeatureStr)
+            }
             // if (str.indexOf('ERROR') !== -1) {
             //     // console.error(chalk.redBright('   ' + str.substr(str.indexOf('ERROR'))))
             // }
