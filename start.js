@@ -8,7 +8,10 @@ dotEnv.config()
 
 let config = {
     baseUrl: process.env.API_ENDPOINT,
-    masterKey: process.env.API_MASTER_KEY
+    stailbaseUrl: process.env.STAIL_EU_API,
+    masterKey: process.env.API_MASTER_KEY,
+    loginUserID: process.env.LOGIN_USER_ID,
+    loginPassword: process.env.LOGIN_PASSWORD
 }
 
 if (config.baseUrl.substr(config.baseUrl.length - 1) !== '/')
@@ -41,7 +44,7 @@ const waitUntilServerStarted = () => {
         cmd.push('test')
     }
    
-    console.log('DEBUG: using cmd:', cmd)
+    console.log('DEBUG: using cmd:', 'java ' + cmd.join(' '))
 
     let karate = childProcess.spawn('java', cmd)
 
