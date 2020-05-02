@@ -3,6 +3,7 @@ const dotEnv = require('dotenv')
 const chalk = require("chalk")
 const readline = require('readline')
 const request = require('request')
+const os = require('os')
 
 dotEnv.config()
 
@@ -33,22 +34,28 @@ const waitUntilServerStarted = () => {
 }
 
 (async () => {
+    let args = process.argv.slice(2)
     await waitUntilServerStarted()
     console.log('> Got connexion')
-
-    let cmd = ['-cp', 'karate.jar:.', `-Dkarate.env=${JSON.stringify(config)}`, 'com.intuit.karate.Main', '-T', '1']
-
-    if (process.argv.length > 2 && process.argv[2] != "-D") {
-        cmd.push(process.argv[2])
-    } else {
-        cmd.push('test')
-    }
-   
+    const isDebug = args.filter(a => a === '-D').length === 1
+    if (isDebug)
+        args = args.filter(a => a !== '-D')
+    let path = __dirname
+    if (os.type() === 'Windows_NT')
+        path += '\\'
+    else
+        path += '/'
+    let cmd = [
+        '-cp',
+        path + 'karate.jar:.',
+        `-Dkarate.env=${JSON.stringify(config)}`,
+        'com.intuit.karate.Main',
+        '-T', '1',
+        args.length > 0 ? args[0] : 'test'
+    ]
     console.log('DEBUG: using cmd:', 'java ' + cmd.join(' '))
-
     let karate = childProcess.spawn('java', cmd)
-
-    if (process.argv.filter(a => a === "-D").length === 0) {
+    if (!isDebug) {
         console.log()
         const rl = readline.createInterface({
             input: karate.stdout,
@@ -64,7 +71,7 @@ const waitUntilServerStarted = () => {
                 let success = str.indexOf('<<pass>>') !== -1
                 let outcome = success ? chalk.green('PASS') : chalk.red('FAIL')
                 console.log('   ' + outcome + chalk.gray(' - ' + features[1] + '/' + features[2] + ' - ') + path[0])
-                console.log('   ' + outcome + ' - ' + features[1] + '/' + features[2] + ' - ' + path[0])
+                console.log('   ' + (success ? "PASS" : "FAIL") + ' - ' + features[1] + '/' + features[2] + ' - ' + path[0])
                 // console.log(duration)
             }
             if (str.indexOf('failed features:') !== -1) {
