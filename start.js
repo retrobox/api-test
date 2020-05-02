@@ -42,12 +42,12 @@ const waitUntilServerStarted = () => {
         args = args.filter(a => a !== '-D')
     let path = __dirname
     if (os.type() === 'Windows_NT')
-        path += '\\'
+        path = '"' + path + '\\karate.jar"'
     else
-        path += '/'
+        path += '/karate.jar:.'
     let cmd = [
         '-cp',
-        path + 'karate.jar:.',
+        path,
         `-Dkarate.env=${JSON.stringify(config)}`,
         'com.intuit.karate.Main',
         '-T', '1',
