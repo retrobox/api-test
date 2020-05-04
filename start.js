@@ -42,7 +42,7 @@ const waitUntilServerStarted = () => {
         args = args.filter(a => a !== '-D')
     let path = __dirname
     if (os.type() === 'Windows_NT')
-        path = '"' + path + '\\karate.jar"'
+        path = path + '\\karate.jar'
     else
         path += '/karate.jar:.'
     let envPassing = ""
