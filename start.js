@@ -76,7 +76,6 @@ const waitUntilServerStarted = () => {
                 let success = str.indexOf('<<pass>>') !== -1
                 let outcome = success ? chalk.green('PASS') : chalk.red('FAIL')
                 console.log('   ' + outcome + chalk.gray(' - ' + features[1] + '/' + features[2] + ' - ') + path[0])
-                console.log('   ' + (success ? "PASS" : "FAIL") + ' - ' + features[1] + '/' + features[2] + ' - ' + path[0])
                 // console.log(duration)
             }
             if (str.indexOf('failed features:') !== -1) {
