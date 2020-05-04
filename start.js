@@ -45,10 +45,15 @@ const waitUntilServerStarted = () => {
         path = '"' + path + '\\karate.jar"'
     else
         path += '/karate.jar:.'
+    let envPassing = ""
+    for (var key in config)
+        envPassing += key + "%=" + config[key] + "%;"
+    if (envPassing.slice(-2) == "%;")
+        envPassing = envPassing.substr(0, envPassing.length - 2)
     let cmd = [
         '-cp',
         path,
-        `-Dkarate.env=${JSON.stringify(config)}`,
+        `-Dkarate.env=${envPassing}`,
         'com.intuit.karate.Main',
         '-T', '1',
         args.length > 0 ? args[0] : 'test'
