@@ -12,7 +12,11 @@ let config = {
     stailbaseUrl: process.env.STAIL_EU_API,
     masterKey: process.env.API_MASTER_KEY,
     loginUserID: process.env.LOGIN_USER_ID,
-    loginPassword: process.env.LOGIN_PASSWORD
+    loginPassword: process.env.LOGIN_PASSWORD,
+    chromePath: process.env.CHROME_PATH,
+    paypalPassword: process.env.PAYPAL_LOGIN,
+    paypalLogin: process.env.PAYPAL_PASSWORD,
+    mailchimpKey: process.env.MAILCHIMP_API_KEY
 }
 
 if (config.baseUrl.substr(config.baseUrl.length - 1) !== '/')

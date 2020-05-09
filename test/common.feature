@@ -2,8 +2,49 @@
 Feature:
 
 Scenario:
-  * def random = function(){return Math.floor(Math.random() * 20) + 1}
+  #* def random = function(){return (Math.floor(Math.random() * 20) + 1).toString()}
+  * def random = 
+    """
+      function(min, max) {
+        if (min === undefined) {
+          min = 0
+        }
+        if (max === undefined) {
+          max = 10000
+        }
+        return Math.floor(Math.random()*(max-min+1)+min).toString()
+      }
+    """
   * def commonHeaders = {Accept: 'application/json', Authorization: '#("Bearer " + masterKey)'}
+  * def randomElement = function(items){return items[Math.floor(Math.random()*items.length)]}
+  * def toFixed = function(number){return parseFloat(number).toFixed(2)}
+  * def md5 = function(str){return Java.type("org.apache.commons.codec.digest.DigestUtils").md5Hex(str)}
+  * def splitElement = function(){return str.split(".")[0]}
+  * def randomText = 
+    """
+      function(size) {
+        var content = read('../ressources/lorem.txt')
+        var max = content.length - size
+        var position = Math.floor(Math.random()*(max+1))
+        if (size > content.length) {
+          return "MAN KESTUFOU ?"
+        }
+        content = content.substr(position, size)
+        if (content.charAt(0) === ' ') {
+          content = content.substr(1)
+        }
+        return content
+      }
+    """
+  * def basicAuth = 
+    """
+      function (creds) {
+        var temp = creds.username + ':' + creds.password;
+        var Base64 = Java.type('java.util.Base64');
+        var encoded = Base64.getEncoder().encodeToString(temp.bytes);
+        return 'Basic ' + encoded;
+      }
+    """
   * def getParams = 
     """
       function(url) {
