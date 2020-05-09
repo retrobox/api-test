@@ -70,7 +70,7 @@ Feature: account login test
       * match $.success == true
 
     # ──────────────────────────────────────────────────────────────────────────────
-    #     call retrobox api with the JWT token to check if it's the correct one     
+    #     Call RetroBox api with the JWT token to check if it's the correct one     
     # ──────────────────────────────────────────────────────────────────────────────
 
     Given url baseUrl + 'graphql'
