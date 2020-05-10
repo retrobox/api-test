@@ -39,13 +39,18 @@ Feature: console images test
           }
         }
       """
-      * def softwareVersion = random() + "." + random()
+      * def softwareVersion = random(1, 20) + "." + random(1, 20)
+      * def size = random(1000, 3500)
+      * def hash = sha256('test')
+      * print 'Hash is:', hash
       * def variables = 
       """
       {
         input: {
           console_version: '#(consoleVersion)',
-          software_version: '#(softwareVersion)'
+          software_version: '#(softwareVersion)',
+          size: '#(size)',
+          hash: '#(hash)'
         }
       }
       """
@@ -64,7 +69,7 @@ Feature: console images test
       * text query = 
       """
         {
-          getManyConsoleImages {
+          getManyConsoleImages(all: true) {
             id
             console_version
             software_version
@@ -112,7 +117,7 @@ Feature: console images test
       * text query = 
       """
         {
-          getManyConsoleImages {
+          getManyConsoleImages(all: true) {
             id
             description
           }

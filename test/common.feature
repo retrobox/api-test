@@ -19,6 +19,7 @@ Scenario:
   * def randomElement = function(items){return items[Math.floor(Math.random()*items.length)]}
   * def toFixed = function(number){return parseFloat(number).toFixed(2)}
   * def md5 = function(str){return Java.type("org.apache.commons.codec.digest.DigestUtils").md5Hex(str)}
+  * def sha256 = function(str){return Java.type("org.apache.commons.codec.digest.DigestUtils").sha256Hex(str)}
   * def splitElement = function(){return str.split(".")[0]}
   * def randomText = 
     """
