@@ -19,7 +19,7 @@ Feature: Test newsletter
     #                      Add a random user to our mail list                       
     # ──────────────────────────────────────────────────────────────────────────────
     Given url baseUrl + 'newsletter/subscribe'
-    * def emailToSubscribe = random() + "@for.test"
+    * def emailToSubscribe = random() + "@ignored-events-for.test"
     When request { email:'#(emailToSubscribe)' }
     When method post
     Then status 200
