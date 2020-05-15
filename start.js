@@ -2,8 +2,9 @@ const childProcess = require('child_process')
 const dotEnv = require('dotenv')
 const chalk = require("chalk")
 const readline = require('readline')
-const request = require('request')
+const url = require('url')
 const os = require('os')
+const net = require('net')
 
 dotEnv.config()
 
@@ -22,26 +23,40 @@ let config = {
 if (config.baseUrl.substr(config.baseUrl.length - 1) !== '/')
     config.baseUrl += "/"
 
+const client = new net.Socket();
+const parsedUrl = url.parse(config.baseUrl)
+
 const waitUntilServerStarted = () => {
     return new Promise(resolve => {
-        request
-            .get(config.baseUrl)
-            .on('response', () => {
-                return resolve()
-            })
-            .on('error', () => { 
-                setTimeout(() => {
-                    return waitUntilServerStarted()
-                }, 500)
-            })
+        connectionConfig = {
+            host: parsedUrl.hostname,
+            port: parseInt(parsedUrl.port === null ? parsedUrl.protocol === 'https:' ? 443 : 80 : parsedUrl.port),
+        }
+        client.removeAllListeners()
+        client.connect(connectionConfig, () => {
+            client.end()
+            console.log('ok')
+            resolve()
+        })
+        client.on('error', () => {
+            setTimeout(() => {
+                console.log('retry')
+                waitUntilServerStarted().then(resolve)
+            }, 500)
+        })
     })
 }
 
 (async () => {
-    let args = process.argv.slice(2)
     await waitUntilServerStarted()
     console.log('> Got connexion')
-    const isDebug = args.filter(a => a === '-D').length === 1
+    let args = process.argv.slice(2)
+    if (process.env.CLI_ARGS !== undefined) {
+        args = args.concat(process.env.CLI_ARGS.split(';'))
+    }
+    let isDebug = args.filter(a => a === '-D').length === 1
+    if (process.env.DEBUG === '1' || process.env.DEBUG === 'true')
+        isDebug = true
     if (isDebug)
         args = args.filter(a => a !== '-D')
     let path = __dirname
