@@ -62,3 +62,34 @@ Scenario:
         return entries;
       }
     """
+  * def encodeBase64FromBytes = 
+    """
+      function(bytes) {
+        var encoder = Java.type('java.util.Base64')
+          .getUrlEncoder()
+          .withoutPadding()
+        return new java.lang.String(encoder.encode(bytes))
+      }
+    """
+  * def encodeBase64 = function(str) {return encodeBase64FromBytes(str.getBytes("UTF-8"))}
+  * def apiJwtKey = "hello"
+  * def generateJWTFromPayload = 
+    """
+      function(payload) {
+        var headerEncoded = encodeBase64(JSON.stringify({alg: "HS256", typ: "JWT"}))
+        var payloadEncoded = encodeBase64(payload)
+        var toSign = headerEncoded + '.' + payloadEncoded
+        var sha256HMAC = Java.type('javax.crypto.Mac').getInstance("HmacSHA256")
+        var secretKey = new javax.crypto.spec.SecretKeySpec(apiJwtKey.getBytes("UTF-8"), "HmacSHA256")
+        sha256HMAC.init(secretKey)
+        var signature = encodeBase64FromBytes(sha256HMAC.doFinal(toSign.getBytes("UTF-8")))
+        var token = toSign + '.' + signature
+        return token
+      }
+    """
+  * def generateJWT = 
+    """
+      function(id, isAdmin) {
+        return generateJWTFromPayload('{"id":"' + id + '","is_admin":' + isAdmin + '}')
+      }
+    """
