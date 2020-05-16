@@ -64,6 +64,8 @@ const waitUntilServerStarted = () => {
         path = path + '\\karate.jar'
     else
         path += '/karate.jar:.'
+    if (process.env.KARATE_PATH !== undefined)
+        path = process.env.KARATE_PATH
     let envPassing = ""
     for (var key in config)
         envPassing += key + "%=" + config[key] + "%;"

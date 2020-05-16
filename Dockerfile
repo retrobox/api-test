@@ -5,6 +5,8 @@ ADD ./ /app
 WORKDIR /app
 
 RUN npm i
-RUN node install.js
+
+# Set the karate absolute path
+ENV KARATE_PATH=/utils/karate.jar
 
 CMD ["node", "start.js"]
