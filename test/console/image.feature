@@ -20,11 +20,11 @@ Feature: console images test
       * request { query: '#(query)' }
       When method post
       Then status 200
-      * def consoleVersion = $.data.getConsoleVersions[0].id
       * match $.success == true
       * match $.data == { getConsoleVersions: #array }
       * match $.data.getConsoleVersions[*].id == '#[] #string'
       * match $.data.getConsoleVersions[*].id == '#[] #regex ^(\\d+\\.)?(\\d+\\.)?(\\*|\\d+)$'
+      * def consoleVersion = $.data.getConsoleVersions[0].id
 
     # ──────────────────────────────────────────────────────────────────────────────
     #                              Store console image                              
@@ -49,7 +49,7 @@ Feature: console images test
         input: {
           console_version: '#(consoleVersion)',
           software_version: '#(softwareVersion)',
-          size: '#(size)',
+          size: '#(1*size)',
           hash: '#(hash)'
         }
       }
